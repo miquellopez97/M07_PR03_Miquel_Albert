@@ -21,8 +21,10 @@ return new class extends Migration
             $table->unsignedBigInteger('apartment_id');
             $table->unsignedBigInteger('platform_id');
 
-            $table->foreign('apartment_id')->references('id')->on('apartments');
-            $table->foreign('platform_id')->references('id')->on('platforms');
+            $table->foreign('apartment_id')->references('id')->on('apartments')
+            ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('platform_id')->references('id')->on('platforms')
+            ->onUpdate('cascade')->onDelete('cascade');
 
             $table->timestamps();
         });
