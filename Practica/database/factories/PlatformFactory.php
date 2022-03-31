@@ -17,7 +17,7 @@ class PlatformFactory extends Factory
     public function definition()
     {
         return [
-            'name'=> $this->faker->userName(),
+            'name' => $this->faker->userName(),
             'owner' => $this->faker->userName()
         ];
     }

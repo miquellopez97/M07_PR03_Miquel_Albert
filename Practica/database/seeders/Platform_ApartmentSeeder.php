@@ -6,7 +6,7 @@ use App\Models\Platform_Apartment;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class PlatformApartmentSeeder extends Seeder
+class Platform_ApartmentSeeder extends Seeder
 {
     /**
      * Run the database seeds.

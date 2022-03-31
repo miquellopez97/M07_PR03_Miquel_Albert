@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ApartmentSeeder::class,
             PlatformSeeder::class,
-            PlatformApartmentSeeder::class,
+            Platform_ApartmentSeeder::class,
         ]);
     }
 }
