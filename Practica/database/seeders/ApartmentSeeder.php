@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Apartment;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +15,8 @@ class ApartmentSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Apartment::factory()
+            ->count(20)
+            ->create();
     }
 }
