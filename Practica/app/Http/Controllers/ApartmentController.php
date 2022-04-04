@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Apartment;
-use App\Http\Requests\StoreApartmentRequest;
-use App\Http\Requests\UpdateApartmentRequest;
+use Illuminate\Http\Request;
 
 class ApartmentController extends Controller
 {
@@ -15,7 +14,7 @@ class ApartmentController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Apartment::all(), 200);
     }
 
     /**
@@ -31,10 +30,10 @@ class ApartmentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreApartmentRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreApartmentRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -42,21 +41,20 @@ class ApartmentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Apartment  $apartment
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Apartment $apartment)
+    public function show($id)
     {
-        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Apartment  $apartment
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Apartment $apartment)
+    public function edit($id)
     {
         //
     }
@@ -64,11 +62,11 @@ class ApartmentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateApartmentRequest  $request
-     * @param  \App\Models\Apartment  $apartment
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateApartmentRequest $request, Apartment $apartment)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -76,11 +74,26 @@ class ApartmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Apartment  $apartment
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Apartment $apartment)
+    public function destroy($id)
     {
         //
+    }
+
+    public function apartaments_premium()
+    {
+        return response()->json(
+            Apartment::where('rented_price','>=',1000)->get(), 
+            200
+        );
+    }
+
+    public function apartaments_rented()
+    {
+        return response()->json(
+            Apartment::where('rented','=',1)->get(), 
+            200);
     }
 }

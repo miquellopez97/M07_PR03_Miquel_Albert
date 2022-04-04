@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\ApartmentController;
+use App\Http\Controllers\UserController;
+use App\Http\Middleware\UserValidate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +17,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('/register', [UserController::class, 'store'])->middleware(UserValidate::class);
+
+Route::resource('/apartment', ApartmentController::class);
+
+Route::get('/apartaments_premium', [ApartmentController::class, 'apartaments_premium']);
+
+Route::get('/apartaments_rented', [ApartmentController::class, 'apartaments_rented']);
