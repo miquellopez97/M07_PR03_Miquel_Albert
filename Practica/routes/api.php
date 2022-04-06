@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/register', [UserController::class, 'store'])->middleware(UserValidate::class);
+Route::post('/login', [UserController::class, 'login']);
 
 Route::resource('/apartment', ApartmentController::class);
 

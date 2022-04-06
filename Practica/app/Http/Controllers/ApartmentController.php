@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Apartment;
 use Illuminate\Http\Request;
+use App\Http\Middleware\ApartmentValidation;
 
 class ApartmentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(ApartmentValidation::class, ['only' => ['store']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -35,7 +40,10 @@ class ApartmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $apartment = Apartment::create($request->all());
+
+        return response()->json($apartment, 201);
     }
 
     /**
@@ -46,6 +54,9 @@ class ApartmentController extends Controller
      */
     public function show($id)
     {
+        $apartment = Apartment::where('id', $id)->first();
+        return response()->json($apartment, 200);
+
     }
 
     /**
@@ -68,7 +79,9 @@ class ApartmentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $apartment = Apartment::find($id);
+        $apartment->fill($request->all())->save();
+        return response()->json($apartment, 200);
     }
 
     /**
@@ -79,7 +92,9 @@ class ApartmentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $apartment = Apartment::find($id);
+        $apartment->forceDelete();
+        return response()->noContent();
     }
 
     public function apartaments_premium()
