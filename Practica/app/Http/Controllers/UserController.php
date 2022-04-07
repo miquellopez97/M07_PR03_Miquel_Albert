@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use App\Traits\ApiResponser;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -17,11 +19,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // bcrypt() //TODO: Bcrypt;
         $request['password'] = bcrypt('password');
         $user = User::create($request->all());
 
-        return response()->json($user, 201);
+        return response()->json([
+            "User" => $user, 
+            "token" => $user->createToken('API Token')->plainTextToken,
+            201]);
     }
 
     public function login(Request $request)
@@ -34,17 +38,11 @@ class UserController extends Controller
         $credentials = request(['email', 'password']);
 
         if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'message' => 'User not found'
-            ], 404);
+            return $this->error('Credentials not match', 401);
         }
 
-        $user = $request->user();
-        $remember_token = $user->createToken('Personal Access Token');
-
-        return response()->json([
-            'access_token' => $remember_token->accessToken,
-            'token_type' => 'Bearer'
+        return $this->success([
+            'token' => auth()->user()->createToken('API Token')->plainTextToken //TODO: createToken not work
         ]);
     }
 }
