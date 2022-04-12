@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class UserValidate
+class AuthValidation
 {
     /**
      * Handle an incoming request.
@@ -17,12 +17,9 @@ class UserValidate
     public function handle(Request $request, Closure $next)
     {
         $request->validate([
-            'name' => 'required|string|alpha_num',
             'email' => 'required|string|email',
-            'password' => 'required|string|min:5',
-            'password_verify' => 'required|same:password'
+            'password' => 'required|string'
         ]);
-
         return $next($request);
     }
 }

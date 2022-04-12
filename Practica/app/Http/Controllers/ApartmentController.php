@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Apartment;
 use Illuminate\Http\Request;
-use App\Http\Middleware\ApartmentValidation;
+use App\Http\Middleware\CreateApartmentValidation;
+use App\Http\Middleware\UpdateApartmentValidation;
 
 class ApartmentController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(ApartmentValidation::class, ['only' => ['store']]);
+        $this->middleware(CreateApartmentValidation::class, ['only' => ['store']]);
+        $this->middleware(UpdateApartmentValidation::class, ['only' => ['update']]);
     }
     /**
      * Display a listing of the resource.
@@ -97,18 +99,13 @@ class ApartmentController extends Controller
         return response()->noContent();
     }
 
-    public function apartaments_premium()
+    public function apartamentsPremium()
     {
-        return response()->json(
-            Apartment::where('rented_price','>=',1000)->get(), 
-            200
-        );
+        return response()->json(Apartment::where('rented_price', '>=', 1000)->get(), 200);
     }
 
-    public function apartaments_rented()
+    public function apartamentsRented()
     {
-        return response()->json(
-            Apartment::where('rented','=',1)->get(), 
-            200);
+        return response()->json(Apartment::where('rented', '=', 1)->get(), 200);
     }
 }
