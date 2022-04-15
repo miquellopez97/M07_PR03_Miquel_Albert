@@ -25,16 +25,6 @@ class ApartmentController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -54,22 +44,14 @@ class ApartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($value)
     {
-        $apartment = Apartment::where('id', $id)->first();
-        return response()->json($apartment, 200);
-
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        if (is_numeric($value)){
+            $apartment = Apartment::where('id', $value)->first();
+            return response()->json($apartment, 200);
+        } else {
+            return response()->json(Apartment::where('city', $value)->get(), 200);
+        }
     }
 
     /**
@@ -107,5 +89,10 @@ class ApartmentController extends Controller
     public function apartamentsRented()
     {
         return response()->json(Apartment::where('rented', '=', 1)->get(), 200);
+    }
+
+    public function platform($platform)
+    {
+        return response()->json(Apartment::where('platform_id', '=', $platform)->get(), 200);
     }
 }

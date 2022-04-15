@@ -26,3 +26,5 @@ Route::resource('/apartment', ApartmentController::class);
 Route::get('/apartaments_premium', [ApartmentController::class, 'apartamentsPremium']);
 
 Route::get('/apartaments_rented', [ApartmentController::class, 'apartamentsRented']);
+
+Route::get('/platform', [ApartmentController::class, 'platform']);

@@ -30,10 +30,14 @@ class UserController extends Controller
     {
         $credentials = request(['email', 'password']);
 
+        echo("Firts");
+
         if (!Auth::attempt($credentials)) {
             return $this->error('Credentials not match', 401);
         }
 
+        echo("Second");
+        
         return response()->json([
             'User' => $credentials['email'],
             'token' => auth()->user()->createToken('API Token')->plainTextToken

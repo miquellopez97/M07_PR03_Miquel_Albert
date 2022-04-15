@@ -14,19 +14,15 @@ class UpdateApartmentValidation
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next, $id)
+    public function handle(Request $request, Closure $next)
     {
-        {
-            $request->validate([
-                'address' => 'nullable|string|max:100',
-                'city' => 'nullable|string',
-                'postal_code' => 'nullable|max:5|min:5',
-                'rented_price' => 'nullable|numeric|gt:0', //TODO: Revisar decimales
-                'rented' => 'nullable|boolean'
-            ]);
-            where([$id => 'required|integer']);
-            return $next([$request, $id]);
-        }
+        $request->validate([
+            'address' => 'nullable|string|max:100',
+            'city' => 'nullable|string',
+            'postal_code' => 'nullable|max:5|min:5',
+            'rented_price' => 'nullable|numeric|gt:0', //TODO: Revisar decimales
+            'rented' => 'nullable|boolean'
+        ]);
         return $next($request);
     }
 }
