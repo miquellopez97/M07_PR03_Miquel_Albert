@@ -37,7 +37,7 @@ class UserController extends Controller
         }
 
         echo("Second");
-        
+
         return response()->json([
             'User' => $credentials['email'],
             'token' => auth()->user()->createToken('API Token')->plainTextToken

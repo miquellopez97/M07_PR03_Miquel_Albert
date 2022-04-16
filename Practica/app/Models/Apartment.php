@@ -20,7 +20,7 @@ class Apartment extends Model
 
     public function apartmentPlatform()
     {
-        return $this->belongsToMany(Platform::class, 'platform_apartment', 'apartment_id', 'plataform_id')->withPivot('premium', 'register_date');
+        return $this->belongsToMany(Platform::class, 'platform__apartments', 'apartment_id', 'platform_id')->withPivot('premium', 'register_date');
     }
 
     public function user()

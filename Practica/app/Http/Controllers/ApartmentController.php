@@ -6,6 +6,7 @@ use App\Models\Apartment;
 use Illuminate\Http\Request;
 use App\Http\Middleware\CreateApartmentValidation;
 use App\Http\Middleware\UpdateApartmentValidation;
+use App\Http\Middleware\ShowOneApartmentValidation;
 use App\Models\Platform;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,6 +16,7 @@ class ApartmentController extends Controller
     {
         $this->middleware(CreateApartmentValidation::class, ['only' => ['store']]);
         $this->middleware(UpdateApartmentValidation::class, ['only' => ['update']]);
+        $this->middleware(ShowOneApartmentValidation::class, ['only' => ['show']]);
     }
     /**
      * Display a listing of the resource.
@@ -23,7 +25,12 @@ class ApartmentController extends Controller
      */
     public function index()
     {
-        return response()->json(Apartment::all(), 200);
+        $apartments = Apartment::all();
+        foreach ($apartments as $apartment) {
+            $apartment->user;
+            $apartment->apartmentPlatform;
+        }
+        return response()->json($apartments, 200);
     }
 
     /**
@@ -34,6 +41,7 @@ class ApartmentController extends Controller
      */
     public function store(Request $request)
     {
+        echo($request);
         $apartment = Apartment::create($request->all());
 
         return response()->json($apartment, 201);
@@ -49,9 +57,17 @@ class ApartmentController extends Controller
     {
         if (is_numeric($value)) {
             $apartment = Apartment::where('id', $value)->first();
+            $apartment->user;
+            $apartment->apartmentPlatform;
             return response()->json($apartment, 200);
         } else {
-            return response()->json(Apartment::where('city', $value)->get(), 200);
+            echo($value);
+            $apartments = Apartment::where('city', $value)->get();
+            foreach ($apartments as $apartment) {
+                $apartment->user;
+                $apartment->apartmentPlatform;
+            }
+            return response()->json($apartments, 200);
         }
     }
 
@@ -84,34 +100,49 @@ class ApartmentController extends Controller
 
     public function apartamentsPremium()
     {
-        return response()->json(Apartment::where('rented_price', '>=', 1000)->get(), 200);
+        $apartments = Apartment::where('rented_price', '>=', 1000)->get();
+        foreach ($apartments as $apartment) {
+            $apartment->user;
+        }
+        return response()->json($apartments, 200);
     }
 
-    public function apartamentsRented()
+    public function apartamentsRented(Request $request)
     {
-        return response()->json(Apartment::where('rented', '=', 1)->get(), 200);
+        $validatedData = Validator::make($request->all(), [
+            'rented' => 'required|boolean'
+        ]);
+
+        // echo($validatedData->validated());
+
+        if (!$validatedData->fails()) {
+            $apartments = Apartment::where('rented', '=', $request->rented)->get();
+            foreach ($apartments as $apartment) {
+                $apartment->user;
+            }
+            return response()->json($apartments, 200);
+        } else {
+            return response()->json('Error de validación', 400);
+        }
     }
 
     public function platform(Request $request)
     {
-        echo ("Firts");
 
         $request->validate([
             'platform_id' => 'required|numeric'
         ]);
 
-        echo ("Second");
-
-        $platform =  Platform::where('id', $request->platform_id)->get();
+        $platforms =  Platform::where('id', $request->platform_id)->get();
         $apartment = null;
 
-        echo ($platform);
-
-        foreach ($platform as $plat) {
-            $plat->apartmentPlatform;
-            $apartment = $plat->apartmentPlatform;
+        foreach ($platforms as $platform) {
+            $apartments = $platform->apartmentPlatform;
+            foreach ($apartments as $apartment) {
+                $apartment->user;
+            }
         }
 
-        return response()->json($apartment, 200);
+        return response()->json($apartments, 200);
     }
 }
