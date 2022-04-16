@@ -14,9 +14,8 @@ class Platform extends Model
         'owner'
     ];
 
-    public function apartment()
+    public function apartmentPlatform()
     {
-        return $this->belongsToMany(apartment::class)
-            ->withPivot('apartment_id');
+        return $this->belongsToMany(Aparment::class, 'platform_apartment', 'plataform_id', 'apartment_id')->withPivot('premium', 'register_date');
     }
 }

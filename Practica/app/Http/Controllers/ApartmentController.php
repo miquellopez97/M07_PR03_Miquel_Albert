@@ -6,6 +6,8 @@ use App\Models\Apartment;
 use Illuminate\Http\Request;
 use App\Http\Middleware\CreateApartmentValidation;
 use App\Http\Middleware\UpdateApartmentValidation;
+use App\Models\Platform;
+use Illuminate\Support\Facades\Validator;
 
 class ApartmentController extends Controller
 {
@@ -32,7 +34,6 @@ class ApartmentController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $apartment = Apartment::create($request->all());
 
         return response()->json($apartment, 201);
@@ -46,7 +47,7 @@ class ApartmentController extends Controller
      */
     public function show($value)
     {
-        if (is_numeric($value)){
+        if (is_numeric($value)) {
             $apartment = Apartment::where('id', $value)->first();
             return response()->json($apartment, 200);
         } else {
@@ -91,8 +92,26 @@ class ApartmentController extends Controller
         return response()->json(Apartment::where('rented', '=', 1)->get(), 200);
     }
 
-    public function platform($platform)
+    public function platform(Request $request)
     {
-        return response()->json(Apartment::where('platform_id', '=', $platform)->get(), 200);
+        echo ("Firts");
+
+        $request->validate([
+            'platform_id' => 'required|numeric'
+        ]);
+
+        echo ("Second");
+
+        $platform =  Platform::where('id', $request->platform_id)->get();
+        $apartment = null;
+
+        echo ($platform);
+
+        foreach ($platform as $plat) {
+            $plat->apartmentPlatform;
+            $apartment = $plat->apartmentPlatform;
+        }
+
+        return response()->json($apartment, 200);
     }
 }
