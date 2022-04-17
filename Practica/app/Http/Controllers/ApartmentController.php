@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\CheckCreatorUser;
 use App\Models\Apartment;
 use Illuminate\Http\Request;
 use App\Http\Middleware\CreateApartmentValidation;
@@ -9,6 +10,7 @@ use App\Http\Middleware\UpdateApartmentValidation;
 use App\Http\Middleware\ShowOneApartmentValidation;
 use App\Models\Platform;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Sanctum\Sanctum;
 
 class ApartmentController extends Controller
 {
@@ -17,6 +19,8 @@ class ApartmentController extends Controller
         $this->middleware(CreateApartmentValidation::class, ['only' => ['store']]);
         $this->middleware(UpdateApartmentValidation::class, ['only' => ['update']]);
         $this->middleware(ShowOneApartmentValidation::class, ['only' => ['show']]);
+        $this->middleware('auth:sanctum', ['only' => ['store', 'update', 'destroy']]);
+        $this->middleware(CheckCreatorUser::class, ['only' => ['update', 'destroy']]);
     }
     /**
      * Display a listing of the resource.
@@ -41,9 +45,8 @@ class ApartmentController extends Controller
      */
     public function store(Request $request)
     {
-        echo($request);
+        $apartment['user_id'] = $request->user()->id;
         $apartment = Apartment::create($request->all());
-
         return response()->json($apartment, 201);
     }
 
@@ -61,7 +64,7 @@ class ApartmentController extends Controller
             $apartment->apartmentPlatform;
             return response()->json($apartment, 200);
         } else {
-            echo($value);
+            // $validator = Validator::make($value, 'optional|string');
             $apartments = Apartment::where('city', $value)->get();
             foreach ($apartments as $apartment) {
                 $apartment->user;

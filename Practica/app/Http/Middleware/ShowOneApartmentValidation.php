@@ -19,7 +19,6 @@ class ShowOneApartmentValidation
     public function handle(Request $request, Closure $next)
     {
         $validator = Validator::make($request->route()->parameters(), ['apartment' => 'required|numeric']);
-
         if ($validator->fails()) {
             $apartments = Apartment::where('city', $request->route()->parameters()['apartment'])->get();
             if (count($apartments) > 0) {
