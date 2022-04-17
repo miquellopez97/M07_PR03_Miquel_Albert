@@ -10,7 +10,6 @@ use App\Http\Middleware\UpdateApartmentValidation;
 use App\Http\Middleware\ShowOneApartmentValidation;
 use App\Models\Platform;
 use Illuminate\Support\Facades\Validator;
-use Laravel\Sanctum\Sanctum;
 
 class ApartmentController extends Controller
 {
@@ -45,7 +44,7 @@ class ApartmentController extends Controller
      */
     public function store(Request $request)
     {
-        $apartment['user_id'] = $request->user()->id;
+        $request->request->add(['user_id' => $request->user()->id]);
         $apartment = Apartment::create($request->all());
         return response()->json($apartment, 201);
     }
@@ -64,7 +63,6 @@ class ApartmentController extends Controller
             $apartment->apartmentPlatform;
             return response()->json($apartment, 200);
         } else {
-            // $validator = Validator::make($value, 'optional|string');
             $apartments = Apartment::where('city', $value)->get();
             foreach ($apartments as $apartment) {
                 $apartment->user;
@@ -115,8 +113,6 @@ class ApartmentController extends Controller
         $validatedData = Validator::make($request->all(), [
             'rented' => 'required|boolean'
         ]);
-
-        // echo($validatedData->validated());
 
         if (!$validatedData->fails()) {
             $apartments = Apartment::where('rented', '=', $request->rented)->get();
